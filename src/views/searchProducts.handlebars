@@ -1,0 +1,40 @@
+<div >
+    <h2>Buscar productos:</h2> 
+    <form id="searchForm" >
+        
+
+        <label for="searchValue">Buscar por:</label>
+        <select name="searchType" id="searchType">
+            <option value="none">Sin filtro</option>
+            <option value="title">Nombre</option>
+            <option value="category">Categoría</option>
+        </select>
+        <input name="searchValue" id="searchValue" placeholder="Required to search">
+
+
+        <label for="page">Página:</label>
+        <input type="number" name="page" id="page">
+
+        <label for="limit">Límite:</label>
+        <input type="number" name="limit" id="limit">
+
+        <label for="sort">Ordenar por precio:</label>
+        <select name="sort" id="sort">
+            <option value="asc">Menor precio</option>
+            <option value="desc">Mayor precio</option>
+        </select>
+
+        <input type="submit" value="Buscar">
+    </form>
+</div>
+
+
+<div id="productContainer">
+  
+</div> 
+
+<script src="/js/searchProducts.js"></script>
+
+
+
+
