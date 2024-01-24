@@ -54,7 +54,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const server = app.listen(PORT, ()=>{
-    `El servidor funciona en el puerto: ${PORT}`
+    console.log(`El servidor funciona en el puerto: ${PORT}`)
+    
 })
 
 //socket

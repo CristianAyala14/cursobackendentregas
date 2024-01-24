@@ -5,7 +5,22 @@ const usersSchema = new mongoose.Schema({
     last_name: String,
     email: String,
     age: Number,
-    password: String
+    password: String,
+    //referencia a carts
+    cartId:{
+        type:[
+            {
+                type:mongoose.SchemaTypes.ObjectId,
+                ref: "Cart"
+            }
+        ],
+        default: []
+    },
+    role:{
+        type: String,
+        enum:["user", "Admin"],
+        default: "user"
+    },
 })
 
 const userModel = mongoose.model(collection, usersSchema)

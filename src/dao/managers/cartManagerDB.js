@@ -6,7 +6,7 @@ class CartManagerDB{
     createCart = async (newCart) => {
         try {
             const cart = await cartsModel.create(newCart);
-            return cart
+            return cart._id;
 
         } catch (error) {
             throw new Error(`Error al crear el carrito: ${error.message}`);
@@ -64,7 +64,7 @@ class CartManagerDB{
                 message: "El producto se agrego correctamente."
             }
         } catch (error) {
-            throw new Error(`Error al agregar el producto al carrito: ${error.message}`);
+            throw new Error(`Error al agregar el producto al carrito`);
         }
     };
     removeProductFromCart = async (cid, pid) => {
@@ -178,6 +178,7 @@ class CartManagerDB{
             throw new Error(`Error al actualizar la cantidad del producto en el carrito: ${error.message}`);
         }
     };
+  
 }
 
 export {CartManagerDB};

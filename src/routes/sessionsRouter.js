@@ -1,11 +1,23 @@
 import {Router} from "express";
 import passport from "passport";
-
+import { CartManagerDB } from "../dao/managers/cartManagerDB.js";
+const cartManager = new CartManagerDB(); //aca estoy haciendo que por cada vez que se inicie sesion se cree un carrito y cuando se termine la sesion, se destrulla.
 
 const router = Router();
 
 //register con autenticacion: 
 router.post("/register", passport.authenticate("register", {failureRedirect: "/api/sessions/failregister"}), async(req,res)=>{
+    
+    if(!req.user){
+        return res.status(400).send({status: "error"})
+    }
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email
+    }
+
     res.send({
         status: "success",
         message: "User registrado."
@@ -26,7 +38,7 @@ async(req,res)=>{
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         age: req.user.age,
-        email: req.user.email
+        email: req.user.email,
     }
     res.send({
         status: "success",
@@ -39,6 +51,9 @@ router.get("/faillogin", (req,res)=>{
 //rutas de autenticacion de terceros: github (dos rotas)
 router.get("/github", passport.authenticate("github", {scope: ["user: email"]}), async (req, res)=>{} )
 router.get("/githubcallback", passport.authenticate("github", {failureRedirect: "/login"}), async (req, res)=>{
+    if(!req.user){
+        return res.status(400).send({status: "error"})
+    }
     req.session.user = req.user
     res.redirect("/profile")
 });
@@ -46,15 +61,24 @@ router.get("/githubcallback", passport.authenticate("github", {failureRedirect: 
 
 //log out
 router.get("/logout", async(req,res)=>{
-    req.session.destroy(err=>{
-        if(err){
+    if (req.session.cartId) {
+        const cartIsEmpty = await cartManager.isCartEmpty(req.session.cartId);
+        if (cartIsEmpty) {
+            // Si el carrito está vacío, destruirlo
+            await cartManager.destroyCart(req.session.cartId);
+            req.session.cartId = null; // Limpiar el ID del carrito en la sesión
+        }
+    }
+    // Destruir la sesión del usuario
+    req.session.destroy(err => {
+        if (err) {
             return res.status(500).send({
                 status: "error",
-                message: "Nose pudo desloguear."
-            })
+                message: "No se pudo cerrar la sesión."
+            });
         }
         res.redirect("/login");
-    })
+    });
 })
 
 

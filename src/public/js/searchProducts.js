@@ -11,30 +11,24 @@ function actualizarVista (res, formData2) {
         res.message.docs.forEach((product) => {
             let li = document.createElement("li");
             li.textContent = `${product.title} $${product.price}`;
-        
+            ul.appendChild(li);
             // Agregar botón para agregar al carrito
             let addButton = document.createElement("button");
             addButton.textContent = "Agregar al carrito";
             addButton.addEventListener ("click", async  function() {
                 // Lógica para agregar el producto al carrito
-                // try {
-                //     // Crear un nuevo carrito
-                //     const newCartResponse = await fetch("api/carts", {
-                //         method: 'POST'
-                //     }); 
-                //     if (newCartResponse) {
-                //         const newCartData = await newCartResponse.json();
-                //         console.log(newCartData)
-                //     } else {      
-                //         console.error('Error al crear el carrito:', newCartResponse.statusText);
-                //     }
-                // } catch (error) {      
-                //     console.error('Error:', error);
-                // }
+                
+
+        
+
+
+
+
+              
+               
             });
         
             li.appendChild(addButton);
-            ul.appendChild(li);
         });
         // Agrega la lista al contenedor
         productContainer.appendChild(ul);
@@ -103,7 +97,7 @@ function actualizarVista (res, formData2) {
 form.addEventListener('submit', function(event) {
     event.preventDefault(); // Previene el envío del formulario por defecto
     const formData = new FormData(this); // Captura los datos del formulario
-    const formData2 = new URLSearchParams(formData).toString()
+    const formData2 = new URLSearchParams(formData).toString() //captura los datos que envio del formulario pero en en formato del link.
     fetch('/api/products?' + formData2 )
     .then(res => res.json())  // Convertir respuesta a JSON
         .then(res => {

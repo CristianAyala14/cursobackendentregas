@@ -29,11 +29,8 @@ router.get("/:cid", async (req, res) => {
     }
 });
 //crear carrito
-router.post("/", async (req,res)=>{
+router.post("/create", async (req,res)=>{
     try {
-        const newCart = {
-            products: []  // Sin productos por ahora
-        };
 
         let cart = await cartManager.createCart(newCart);
         res.send({
@@ -66,7 +63,7 @@ router.delete("/:cid", async (req, res) => {
     });
 });
 // Elimina un producto específico del carrito
-router.delete("/:cid/products/:pid", async (req, res) => {
+router.delete("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
     const result = await cartManager.removeProductFromCart(pid, cid);
@@ -86,7 +83,7 @@ router.put("/:cid", async (req, res) => {
     });
 });
 // Actualiza la cantidad de un producto en el carrito
-router.put("/:cid/products/:pid", async (req, res) => {
+router.put("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
     const quantity = req.body.quantity;
@@ -96,6 +93,8 @@ router.put("/:cid/products/:pid", async (req, res) => {
         message: result
     });
 });
+
+
 
 
 
