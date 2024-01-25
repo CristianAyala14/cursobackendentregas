@@ -6,21 +6,15 @@ const usersSchema = new mongoose.Schema({
     email: String,
     age: Number,
     password: String,
-    //referencia a carts
     cartId:{
-        type:[
-            {
-                type:mongoose.SchemaTypes.ObjectId,
-                ref: "Cart"
-            }
-        ],
-        default: []
+        type:mongoose.SchemaTypes.ObjectId,
+        ref: "carts"
     },
     role:{
         type: String,
         enum:["user", "Admin"],
         default: "user"
-    },
+    }
 })
 
 const userModel = mongoose.model(collection, usersSchema)

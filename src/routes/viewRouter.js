@@ -3,7 +3,7 @@ import { CartManagerDB } from "../dao/managers/cartManagerDB.js";
 let cartManager = new CartManagerDB();
 const router = Router();
 
-//autorizaciones segun usuario.
+//POLITICAS autorizaciones segun usuario.
 const publicAccess = (req,res,next)=>{
     if(req.session.user){
         return res.redirect("/")
@@ -18,33 +18,34 @@ const privateAccess = (req,res,next)=>{
 }
 
 
-//views routes para sessions
-router.get("/profile", privateAccess, (req,res)=>{
-    res.render("profile",{user: req.session.user})
-})
+//SESSIONS
 router.get("/register", publicAccess, (req,res)=>{
-    res.render("register")
+    res.render("registerUser")
 })
+    //profile user
+router.get("/profile", privateAccess, (req,res)=>{
+    res.render("profile")
+})
+    //register user
+    //login user
 router.get("/login", publicAccess, (req,res)=>{
     res.render("login")
 })
+    //reset user password
 router.get("/resetpassword", publicAccess, (req,res)=>{
     res.render("resetPassword")
 })
 
 
-
-
-//
+//register product view
 router.get("/registerproduct", privateAccess, (req,res)=>{
     res.render("registerProducts")
 })
-
-//vista de productos cargados
+//added products view
 router.get("/search", privateAccess, async(req,res)=>{
     res.render("searchProducts" )
 })
-//vista buscar producto por id
+//get cart product by ids view
 router.get("/cartDetail/:cid", privateAccess, async (req, res) => {
     try {
         const cid  = req.params.cid;

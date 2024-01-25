@@ -4,6 +4,7 @@ import  {Router} from "express";
 const router = Router();
 const cartManager = new CartManagerDB();
 
+//show carts (nose donde usaria esto)
 router.get("/", async (req,res)=>{
     tr
     const carts = await cartManager.getCarts();
@@ -12,6 +13,20 @@ router.get("/", async (req,res)=>{
         message: carts
     })
 })
+//create cart
+router.post("/create", async (req,res)=>{
+    try {
+
+        let cart = await cartManager.createCart(newCart);
+        res.send({
+            status: "success",
+            message: cart
+        })   
+    } catch (error) {
+        console.error('Error:', error);
+    }
+})
+//get cart by id
 router.get("/:cid", async (req, res) => {
     try {
         const cid = req.params.cid;
@@ -28,21 +43,7 @@ router.get("/:cid", async (req, res) => {
         });
     }
 });
-//crear carrito
-router.post("/create", async (req,res)=>{
-    try {
-
-        let cart = await cartManager.createCart(newCart);
-        res.send({
-            status: "success",
-            message: cart
-        })   
-    } catch (error) {
-        console.error('Error:', error);
-    }
-   
-})
-//Agrega un producto al carrito
+//Add product to cart
 router.post("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
@@ -53,7 +54,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
             message: cart
         })
 });
-// Elimina todos los productos del carrito
+// Remove all products from id cart
 router.delete("/:cid", async (req, res) => {
     const cid = req.params.cid;
     const result = await cartManager.removeAllProductsFromCart(cid);
@@ -62,7 +63,7 @@ router.delete("/:cid", async (req, res) => {
         message: result
     });
 });
-// Elimina un producto específico del carrito
+// remove a product id from id cart
 router.delete("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
@@ -72,22 +73,22 @@ router.delete("/:cid/product/:pid", async (req, res) => {
         message: result
     });
 });
-// Actualiza el carrito con un arreglo de productos ?? 
-router.put("/:cid", async (req, res) => {
-    const cid = req.params.cid;
-    const newProducts = req.body.products; //  req.body.products debe ser un array de productos con un id.
-    const result = await cartManager.updateCartProducts(cid, newProducts);
-    res.send({
-        status: "success",
-        message: result
-    });
-});
-// Actualiza la cantidad de un producto en el carrito
+// update product quantity in a cart
 router.put("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
     const quantity = req.body.quantity;
     const result = await cartManager.updateProductQuantity(cid, pid, quantity);
+    res.send({
+        status: "success",
+        message: result
+    });
+});
+// update cart with products array 
+router.put("/:cid", async (req, res) => {
+    const cid = req.params.cid;
+    const newProducts = req.body.products; //  req.body.products debe ser un array de productos con un id.
+    const result = await cartManager.updateCartProducts(cid, newProducts);
     res.send({
         status: "success",
         message: result

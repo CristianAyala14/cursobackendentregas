@@ -10,9 +10,8 @@ form.addEventListener("submit", (event)=>{
         headers: {
             "Content-Type": "application/json"
         }
-    }).then(res =>{
+    }).then(res=>res.json()).then(res =>{
         if(res.status === 200){
-            console.log(res)
             window.location.replace("/profile")
         }
     })
