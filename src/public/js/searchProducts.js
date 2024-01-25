@@ -92,8 +92,6 @@ function actualizarVista (res, formData2) {
 }
 
 
-
-
 form.addEventListener('submit', function(event) {
     event.preventDefault(); // Previene el envío del formulario por defecto
     const formData = new FormData(this); // Captura los datos del formulario

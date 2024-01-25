@@ -2,12 +2,13 @@ import {fileURLToPath} from "url";
 import {dirname} from "path";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import passport from "passport";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export default __dirname;
 
-//recursos para passport strategy
+//recursos para passport local strategy
 //bcrypt (funcion que evuelve hasheada la password)
 export const createHash = (password) =>{
     return bcrypt.hashSync(password,bcrypt.genSaltSync(10))
@@ -18,25 +19,45 @@ export const validatePassword = (password, user)=>{
 }
 
 
-const PRIVATE_KEY = "EcommerceKeyUser";
+
+//funciones para generar token
+    //genera el token
 export const generateToken = (user) => {
-    const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: "1d" });
+    let token = jwt.sign(user, "EcommerceKeyUser", { expiresIn: "1d" });
     return token;
 };
-export const authToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader.split(" ")[1];
-    if (token === "null") {
-        return res.status(401).send({ status: "error", error: "No autorizado" });
-    }
-    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
-        console.log(error);
-        if (error) {
-            return res.status(401).send({ status: "error", error: "No autorizado" });
-        }
-        req.user = credentials.user;
-        next();
-    });
-};
 
+
+
+//middleware custom call para passport jwt. (de esta manera podemos ver por que no estaria autorizado de ser el caso, ya que si dejo solo "passport.authenticate("jwt",).. "" obtendre un unauthorized sin mas)
+export const passportCall = (strategy)=>{
+    return async (req, res, next)=>{
+        passport.authenticate(strategy, {session: false}, function(err,user,info){
+            if(err){
+                return next(err); 
+            } 
+            if(!user){
+                return res.status(401).json({status: "error aqui", error: info.toString()})
+            }
+            req.user = user;
+            next()
+        })(req,res,next) 
+    }
+}
+
+
+//middelware de autorizacion para comprobar el rol 
+export const authorizeRole = (role)=>{
+    return async(req,res,next)=>{
+        if(!req.user){
+            return res.status(401).json({error: "Usuario no autorizado"})
+        }
+        if(req.user.role !== role){
+            return res.status(403).json({error: "Usuario sin permiso"})
+        }
+        
+
+        next();
+    }
+}
 

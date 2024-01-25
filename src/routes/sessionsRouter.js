@@ -1,6 +1,6 @@
 import {Router} from "express";
 import passport from "passport";
-import { authToken, generateToken } from "../utils.js";
+import { generateToken, passportCall , authorizeRole} from "../utils.js";
 
 
 const router = Router();
@@ -11,7 +11,7 @@ router.post("/register", passport.authenticate("register", {passReqToCallback: t
         status: "success",
         message: "Usuario registrado",
         payload: req.user._id
-    }).redirect("/login")
+    })
 
 })
 router.get("/failregister", async(req,res)=>{
@@ -21,18 +21,17 @@ router.get("/failregister", async(req,res)=>{
 //login con autenticacion  passport local::
 router.post("/login", passport.authenticate("login", {session: false, failureRedirect: "/api/sessions/faillogin"}), 
 async(req,res)=>{
-    //crear carrito?
-    //user token
+    //user para token
     const user ={
         id: req.user._id,
-        name:  `${req.user.first_name} ${req.user.last_name} `,
+        name:  req.user.first_name,
         role: req.user.role,
         email: req.user.email
     }
     //creo token
     const access_token = generateToken(user);
     //guardo en cookie y response
-    res.cookie("JwtCookie", access_token, {httpOnly: true},{maxAge: 360000}).send({
+    res.cookie("JwtCookie", access_token, {httpOnly: true,maxAge: 360000}).send({
         status: "success",
         message: "Usuario logeado",
         payload: user
@@ -43,10 +42,7 @@ router.get("/faillogin", (req,res)=>{
     res.send({error: "Fallo en el log in"})
 })
 
-//esto es una ruta para que devuelva el usuario y poder mostrarlo en views
-router.get("/api/currentsession", authToken, (req, res)=>{
-    res.send({status: "success", payload: req.user})
-})
+
 
 
 

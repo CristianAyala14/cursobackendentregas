@@ -38,7 +38,7 @@ router.get("/", async (req,res)=>{
     }
 })
 //registrar producto (TESTED)
-router.post("/" , async(req,res)=>{
+router.post("/registerproducts" , async(req,res)=>{
     try {
         const {title, description, code, price, stock, category} = req.body;
         

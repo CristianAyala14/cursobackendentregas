@@ -12,7 +12,7 @@ form.addEventListener("submit", (event)=>{
         }
     }).then(res => res.json()).then(res=>{
         console.log(res)
-        window.location.replace("/profile")
+        window.location.replace("/login")
 
     })
 })

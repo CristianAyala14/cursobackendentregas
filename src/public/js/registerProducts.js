@@ -10,7 +10,7 @@ form.addEventListener('submit', function(event) {
     event.preventDefault(); // Previene el envío del formulario por defecto
     const formData = new FormData(this); // Captura los datos del formulario
     const formData2 = new URLSearchParams(formData).toString();
-    fetch('/api/products', {
+    fetch('/api/products/registerproducts', {
         method: 'POST', // Asegúrate de especificar el método como POST
         body: formData2, // Envía los datos del formulario como body de la solicitud
         headers: {

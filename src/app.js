@@ -1,6 +1,4 @@
 import express from "express";
-import session from "express-session";
-import mongoStore from "connect-mongo";
 import __dirname from "./utils.js";
 //para views handlebars
 import {engine} from "express-handlebars";
@@ -15,7 +13,8 @@ import mongoose from "mongoose";
 //autenticaciones
 import passport from "passport";
 import inicializePassport from "./config/passport.config.js";
-
+//manejo de cookies
+import cookieParser from "cookie-parser";
 
 //server
 const PORT = 8080;
@@ -30,12 +29,13 @@ app.engine("handlebars", engine());
 app.set("view engine", "handlebars")
 app.set("views", __dirname + "/views")
 //mongoDB
-const MONGO = "mongodb+srv://cristianpabloayala:nolimit14@cluster1.3xzue7l.mongodb.net/Segundapreentrega"
-const connection = mongoose.connect(MONGO)
+const MONGO = "mongodb+srv://cristianpabloayala:nolimit14@cluster1.3xzue7l.mongodb.net/Ecommerce"
+const connection = mongoose.connect(MONGO);
+//cookies
+app.use(cookieParser());
 //passport
 inicializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
 
 //routes
 app.use("/", viewRouter)

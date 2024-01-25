@@ -1,52 +1,56 @@
 import {Router} from "express";
 import { CartManagerDB } from "../dao/managers/cartManagerDB.js";
 let cartManager = new CartManagerDB();
+import { passportCall , authorizeRole} from "../utils.js";
+
 const router = Router();
 
-//POLITICAS autorizaciones segun usuario.
-const publicAccess = (req,res,next)=>{
-    if(req.session.user){
-        return res.redirect("/")
-    }
-    next();
-}
-const privateAccess = (req,res,next)=>{
-    if(!req.session.user){
-        return res.redirect("/login")
-    }
-    next();
-}
 
 
 //SESSIONS
-router.get("/register", publicAccess, (req,res)=>{
+    //register user
+router.get("/registeruser",(req,res)=>{
+    
     res.render("registerUser")
 })
     //profile user
-router.get("/profile", privateAccess, (req,res)=>{
-    res.render("profile")
+router.get("/profile", passportCall("jwt"),(req,res)=>{
+    let user = {}
+    if(req.user){
+        user= req.user
+        console.log(user)
+        res.render("profile", {user});
+    }
 })
-    //register user
+
     //login user
-router.get("/login", publicAccess, (req,res)=>{
-    res.render("login")
+router.get("/login",(req,res)=>{
+    if (req.cookies["JwtCookie"]) {
+        return res.redirect("/profile");
+    }else{
+        res.render("login");
+    }
 })
     //reset user password
-router.get("/resetpassword", publicAccess, (req,res)=>{
+router.get("/resetpassword", (req,res)=>{
     res.render("resetPassword")
 })
 
 
-//register product view
-router.get("/registerproduct", privateAccess, (req,res)=>{
+
+
+
+//PRODUCTS
+    //register product view
+router.get("/registerproducts", passportCall("jwt"), authorizeRole("admin"), async (req,res)=>{
     res.render("registerProducts")
 })
-//added products view
-router.get("/search", privateAccess, async(req,res)=>{
+    //added products view
+router.get("/searchproducts", passportCall("jwt"), authorizeRole("admin"), async(req,res)=>{
     res.render("searchProducts" )
 })
-//get cart product by ids view
-router.get("/cartDetail/:cid", privateAccess, async (req, res) => {
+    //get cart product by ids view
+router.get("/cartDetail/:cid",passportCall("jwt"), authorizeRole("admin"), async (req, res) => {
     try {
         const cid  = req.params.cid;
         let rta = await cartManager.getCartById(cid)
