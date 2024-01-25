@@ -17,7 +17,7 @@ function actualizarVista (res, formData2) {
             addButton.textContent = "Agregar al carrito";
             addButton.addEventListener ("click", async  function() {
                 // Lógica para agregar el producto al carrito
-                
+                console.log("Aun sin desarrollar")
 
         
 

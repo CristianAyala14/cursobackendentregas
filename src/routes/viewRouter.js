@@ -5,7 +5,11 @@ import { passportCall , authorizeRole} from "../utils.js";
 
 const router = Router();
 
-
+//Home
+router.get("/",(req,res)=>{
+    
+    res.render("home")
+})
 
 //SESSIONS
     //register user
@@ -18,8 +22,13 @@ router.get("/profile", passportCall("jwt"),(req,res)=>{
     let user = {}
     if(req.user){
         user= req.user
-        console.log(user)
+        if(user.role === "admin"){
+            user = {...req.user, isAdmin: true}
+        }
         res.render("profile", {user});
+    }else{
+        return res.redirect("/profile");
+
     }
 })
 
@@ -46,7 +55,7 @@ router.get("/registerproducts", passportCall("jwt"), authorizeRole("admin"), asy
     res.render("registerProducts")
 })
     //added products view
-router.get("/searchproducts", passportCall("jwt"), authorizeRole("admin"), async(req,res)=>{
+router.get("/searchproducts", passportCall("jwt"), async(req,res)=>{
     res.render("searchProducts" )
 })
     //get cart product by ids view

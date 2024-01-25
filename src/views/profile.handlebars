@@ -1,7 +1,13 @@
 <div>
-    <h1>Tu perfil (Sin datos sensibles)</h1>
+    <h1>Tu perfil</h1>
     <p>{{user.name}}</p>
     <p>{{user.email}}</p>
     <p>{{user.role}}</p>
-    {{!-- <a href="/api/sessions/logout">Cerrar sesion.</a> --}}
+    {{#if user.isAdmin}}
+        <p><a href="/registerproducts">Registrar Producto</a></p>
+        <p><a href="/searchproducts">Buscar Producto</a></p>
+    {{else}}
+        <p><a href="/searchproducts">Buscar Producto</a></p>
+    {{/if}}
+    <a href="/api/sessions/logout">Cerrar sesión.</a> 
 </div>

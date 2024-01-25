@@ -53,10 +53,10 @@ router.get("/faillogin", (req,res)=>{
 
 
 //log out
-router.get("/logout", async(req,res)=>{
-    
-
-})
+router.get("/logout", (req, res) => {
+    res.clearCookie("JwtCookie");
+    res.redirect("/"); 
+});
 
 //reset password
 router.post("/restartPassword", async(req,res)=>{
