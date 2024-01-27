@@ -1,7 +1,10 @@
 import {Router} from "express";
 import passport from "passport";
-import { generateToken, passportCall , authorizeRole} from "../utils.js";
-
+import { generateToken} from "../utils.js";
+import UsersManagerDB from "../dao/managers/usersManager.js"
+//importaciones para el logout
+const usersManager = new UsersManagerDB();
+import {createHash, validatePassword,} from "../utils.js";
 
 const router = Router();
 
@@ -17,7 +20,6 @@ router.post("/register", passport.authenticate("register", {passReqToCallback: t
 router.get("/failregister", async(req,res)=>{
     res.send({error: "Fallo en el registro"})
 })
-
 //login con autenticacion  passport local::
 router.post("/login", passport.authenticate("login", {session: false, failureRedirect: "/api/sessions/faillogin"}), 
 async(req,res)=>{
@@ -44,14 +46,6 @@ router.get("/faillogin", (req,res)=>{
 
 
 
-
-
-
-
-
-
-
-
 //log out
 router.get("/logout", (req, res) => {
     res.clearCookie("JwtCookie");
@@ -59,7 +53,39 @@ router.get("/logout", (req, res) => {
 });
 
 //reset password
-router.post("/restartPassword", async(req,res)=>{
+router.post("/resetpassword", async(req,res)=>{
+    const {email, password} = req.body;
+    try {
+        if(!email || !password){
+            res.status(400).json({ error: "Internal Server Error" });
+        }
+        let user = await usersManager.getBy({email: email})
+        if(user){
+            let id = user._id;
+            user.password = createHash(password)
+            let result = await usersManager.updateUser(id, user)
+            const userToken ={
+                id: user._id,
+                name:  user.first_name,
+                role: user.role,
+                email: user.email
+            }
+            generateToken(userToken);
+            res.send({status: "success", message: "contraseña modificada.", result})
+
+        }
+        
+    } catch (error) {
+        res.status(400).json({ error: "Internal Server Error" });
+    }
+
+
+
+
+
+
+
+
 
 })
 
