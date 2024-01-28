@@ -51,23 +51,3 @@ class ProductManagerDB{
 
 export {ProductManagerDB};
 
-// deleteProduct = async (pId) => {
-        
-// }
-
-// updateProduct = async (pId, updatedProduct) => {
-//     try {
-//         const products = await this.getProducts();
-//         const productIndex = products.findIndex(product => product.id == pId);
-
-//         if (productIndex !== -1) {
-//             products[productIndex] = updatedProduct;
-
-//             await fs.promises.writeFile(this.path, JSON.stringify(products, null, "\t"));
-//         } else {
-//             throw new Error('Producto no encontrado');
-//         }
-//     } catch (error) {
-//         throw new Error(`Error al actualizar el producto: ${error.message}`);
-//     }
-// };

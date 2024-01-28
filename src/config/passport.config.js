@@ -51,7 +51,7 @@ const inicializePassport = ()=>{
                     email,
                     age,
                     password: createHash(password),
-                    role
+                    role,
                 }
                 let result = await usersManager.create(newUser)
                 return done (null,result)

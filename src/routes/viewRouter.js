@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { CartManagerDB } from "../dao/managers/cartManagerDB.js";
+import CartManagerDB  from "../dao/managers/cartManagerDB.js";
 let cartManager = new CartManagerDB();
 import { passportCall , authorizeRole} from "../utils.js";
 

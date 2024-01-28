@@ -1,5 +1,6 @@
-import { CartManagerDB } from "../dao/managers/cartManagerDB.js";
+import CartManagerDB from "../dao/managers/cartManagerDB.js";
 import  {Router} from "express";
+import { passportCall } from "../utils.js";
 
 const router = Router();
 const cartManager = new CartManagerDB();
@@ -95,10 +96,15 @@ router.put("/:cid", async (req, res) => {
     });
 });
 
+//ruta de prueba para ver si puedo acceder al carrito del usuario desde el front end
+router.get("/currentcart", passportCall("jwt"), (req,res)=>{
+        const currentCart = req.user.cartId
+        
+    })
 
 
 
-
-
+    //cookie stractor para estrategia jwt en passport.
+  
 
 export default router; 
